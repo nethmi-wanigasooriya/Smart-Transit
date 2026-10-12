@@ -1,9 +1,7 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
@@ -19,7 +17,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Smart Transit Backend is running!"})
 	})
 
-	
+	// Port එක Choreo සඳහා 8080 ලෙස ලබා දීම
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
