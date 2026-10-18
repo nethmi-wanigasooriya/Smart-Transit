@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../services/api_service.dart';
 import 'passenger/home_view.dart';
 import 'driver/driver_dashboard_view.dart';
 import 'admin/admin_dashboard_view.dart';
@@ -13,8 +12,6 @@ class SignInView extends StatefulWidget {
 
 class _SignInViewState extends State<SignInView> {
   bool _isSignUp = false;
-  bool _isLoading = false;
-
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -33,70 +30,22 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  void _handleSubmit() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-    final name = _nameController.text.trim();
+  void _handleSubmit() {
+    final name = _nameController.text.trim().isEmpty 
+        ? (_isSignUp ? 'New User' : (_selectedRole == 'Driver' ? 'Driver User' : (_selectedRole == 'Admin' ? 'Admin User' : 'Passenger User')))
+        : _nameController.text.trim();
+    final email = _emailController.text.trim().isEmpty 
+        ? 'user@smarttransit.com' 
+        : _emailController.text.trim();
 
-    if (email.isEmpty || password.isEmpty || (_isSignUp && name.isEmpty)) {
+    if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all required details.')),
+        const SnackBar(content: Text('Please enter valid email and password')),
       );
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      if (_isSignUp) {
-      
-        bool isSuccess = await ApiService.signUp(name, email, password, _selectedRole);
-        if (mounted) {
-          if (isSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Sign Up Successful! Redirecting...')),
-            );
-            _navigateToDashboard(name, email, _selectedRole);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Sign Up Failed. Check Backend Connection!')),
-            );
-          }
-        }
-      } else {
-        
-        var userData = await ApiService.signIn(email, password);
-        if (mounted) {
-          if (userData != null) {
-            String fetchedName = userData['name'] ?? (name.isNotEmpty ? name : 'Smart Transit User');
-            String fetchedRole = userData['role'] ?? _selectedRole;
-            _navigateToDashboard(fetchedName, email, fetchedRole);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Invalid Credentials or Backend Connection Error!')),
-            );
-          }
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: $e')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  void _navigateToDashboard(String name, String email, String role) {
-    if (role == 'Passenger') {
+    if (_selectedRole == 'Passenger') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -106,7 +55,7 @@ class _SignInViewState extends State<SignInView> {
           ),
         ),
       );
-    } else if (role == 'Driver') {
+    } else if (_selectedRole == 'Driver') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -116,7 +65,7 @@ class _SignInViewState extends State<SignInView> {
           ),
         ),
       );
-    } else if (role == 'Admin') {
+    } else if (_selectedRole == 'Admin') {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -243,24 +192,11 @@ class _SignInViewState extends State<SignInView> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  onPressed: _isLoading ? null : _handleSubmit,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : Text(
-                          _isSignUp ? 'Sign Up' : 'Sign In',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                  onPressed: _handleSubmit,
+                  child: Text(
+                    _isSignUp ? 'Sign Up' : 'Sign In',
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
