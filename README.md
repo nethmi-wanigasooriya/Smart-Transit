@@ -1,17 +1,41 @@
-# smart_transit_app
+# Smart Transit App 🚍
 
-A new Flutter project.
+A modern mobile application built with **Flutter** to streamline and manage public transit operations efficiently.
 
-## Getting Started
+## 🚀 Features
+- **Route & Transit Management**: Seamlessly manage and track transit routes and schedules.
+- **Local Data Storage**: Utilizes efficient local database solutions (SQLite / Hive) for fast and secure offline data access.
+- **Push & Local Notifications**: Integrated notification mechanisms for alerts and updates.
+- **Cross-Platform Design**: Developed using Flutter for smooth performance on Android and iOS.
 
-This project is a starting point for a Flutter application.
+## 🛠️ Tech Stack
+- **Framework**: Flutter (Dart)
+- **Architecture**: MVC (Model-View-Controller) design pattern
+- **Local Database**: SQLite / Hive
+- **Build Tools**: Android Gradle Plugin (AGP), Gradle, Kotlin, Java 17 (Eclipse Temurin)
 
-A few resources to get you started if this is your first Flutter project:
+## 📦 Getting Started
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+To get a local copy up and running, follow these simple steps:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Prerequisites
+- Flutter SDK installed on your machine.
+- Android Studio / Android SDK (configured with Java 17).
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+
+Navigate to the project directory:
+  cd smart-transit-app
+
+Install dependencies:
+  flutter pub get
+
+Run the application:
+  flutter run
+
+## 🔨 Building the Release APK
+To generate the production-ready release APK for Android, run the following command in your terminal:
+  flutter build apk --release --android-skip-build-dependency-validation
